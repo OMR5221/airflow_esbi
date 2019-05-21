@@ -1,0 +1,25 @@
+version: '2'
+services:
+  postgres:
+      image: postgres:9.6
+      environment:
+          - POSTGRES_USER=airflow
+          - POSTGRES_PASSWORD=airflow
+          - POSTGRES_DB=airflow
+      ports:
+          - 5432:5432
+  webserver:
+      image: puckel/docker-airflow:1.8.0
+      restart: always
+      depends_on:
+          - postgres
+      environment:
+          - LOAD_EX=n
+          - EXECUTOR=Local
+      ports:
+          - 8080:8080
+      command: webserver
+  app:
+    depends_on:
+      - webserver
+    build: ./app

@@ -1,0 +1,24 @@
+version: '2'
+services:
+  afpostgres:
+      image: postgres:9.6
+      environment:
+          - POSTGRES_USER=airflow
+          - POSTGRES_PASSWORD=airflow
+          - POSTGRES_DB=airflow
+      ports:
+          - 5432:5432
+  afwebserver:
+      image: puckel/docker-airflow:1.8.0
+      restart: always
+      depends_on:
+          - afpostgres
+      environment:
+          - LOAD_EX=n
+          - EXECUTOR=Local
+      # volumes:
+          # - ./app/dags:/usr/local/airflow/dags
+          # - ./app/sql:/usr/local/airflow/sql
+      ports:
+          - 8080:8080
+      command: webserver
